@@ -2,7 +2,7 @@ clc
 clear
 
 
-x_dash = [-110 : 2 : 110 + 2] .* 1e-3;
+x_dash = [-110 : 2 : 110 + 2] .* 1e-3;  % Hi Lei, what is x_dash mean
 y_dash = [-93 : 2 : 92 + 2] .* 1e-3;
 
 [Axis_x, Axis_y] = ndgrid(x_dash, y_dash);
