@@ -1,0 +1,8 @@
+.idea
+__pycache__
+*/__pycache__
+docs/_build
+docs/_templates
+docs/_static
+tmp
+experimental
