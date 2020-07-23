@@ -1,4 +1,4 @@
-function [eps_BIM, sigma_BIM, error_obj, error_tmp, XX_array] = BIM_newReg_v1(freq_num, exp_Cal1_filename, exp_Cal2_filename, exp_target_filename, lambda)
+function [eps_DBIM, sigma_DBIM, error_obj, error_tmp, XX_array] = DBIM_newReg_v1(freq_num, exp_Cal1_filename, exp_Cal2_filename, exp_target_filename, lambda)
 
 addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/bp_postprocessing/Parameters')      %%% You might need to change this folder path
 
@@ -106,6 +106,8 @@ for src_dash = 1 : src_Tx_N
     
 end
 
+zero_index = find(doi_mask_4mm == 0);
+
 %%% ---------------------------- Build the Green function ----------------------------- %%%
 
 al = 4e-3;
@@ -165,6 +167,7 @@ Exp_case_struct = sparameters(exp_target_filename);
 Exp_case = Exp_case_struct.Parameters;
 Exp_case = Exp_case(:, :, freq_sample(freq_num));
 
+
 alpha_Ez = Ess_MoM_Cal2 ./ Exp_Cal2;
 Ess = alpha_Ez .* Exp_case;
 
@@ -173,6 +176,7 @@ Ess = alpha_Ez .* Exp_case;
 
 XX = 0 * ones(total_n, 1);
 XX(zero_index) = 0;
+% XX = X_tmp;
 Ez_tot_BIM = zeros(total_n, src_Tx_N);
 Lambda = lambda(freq_num);
 
@@ -182,53 +186,46 @@ error_tmp = zeros(20, 1);
 XX_array = zeros(Nx * Ny, 20);
 
 for nn = 1 : 15
-%     tic
-%     fprintf('The %ith iteration\n', nn);
     
     B = [];
+    B_DBIM = [];
     I = eye(total_n);
     
     GG_Ez_BIM = I + Gezz .* repmat(XX.', total_n, 1);
     
     inv_GG_Ez_BIM = GG_Ez_BIM \ I;
+   
+    Gezz_source_DBIM = inv_GG_Ez_BIM * Gezz_source.';
+    Gezz_source_DBIM = Gezz_source_DBIM.';    
     
     for src_num = 1 : src_Tx_N
         Ez_tot_BIM(:, src_num) = inv_GG_Ez_BIM * Ez_inc_MoM(:, src_num);
-%         fprintf('Finished the %ith source...\n', src_num);
     end
     
-    for src_num = 1 : src_Rx_N
+    
+    for src_num = 1 : src_Tx_N
         B_dash = Gezz_source .* repmat(Ez_tot_BIM(:, src_num).', src_Rx_N, 1);
         B = [B ; B_dash];
+        
+        B_DBIM_dash = Gezz_source_DBIM .* repmat(Ez_tot_BIM(:, src_num).', src_Rx_N, 1);
+        B_DBIM = [B_DBIM ; B_DBIM_dash];
     end
     
-    Breg = [B ; Lambda * eye(total_n)];
+    E_scat_DBIM = B * XX;
+    delta_E_scat = Ess(:) - E_scat_DBIM;
     
-    x0 = Lambda * zeros(total_n, 1);
-    Ereg = [Ess(:) ; x0];
+    delta_XX = lsmr(B_DBIM, delta_E_scat(:), Lambda);
     
-    XX = lsmr(Breg, Ereg);
-    
+    XX = XX + delta_XX;
     XX(zero_index) = 0;
     
-    error_obj(nn) = sqrt(sum(abs(B * XX - Ess(:)) .^ 2) ./ sum(abs(Ess(:)) .^ 2));
-
-    XX_rmse = XX;
-    XX_rmse(zero_index) = 1;
-    XX_tmp_rmse = X_tmp;
-    XX_tmp_rmse(zero_index) = 1;
-    error_tmp(nn) = sqrt(sum(abs(XX_rmse - XX_tmp_rmse) .^ 2) ./ sum(abs(XX_tmp_rmse) .^ 2));
-    
-%     fprintf('...Error: %i\n', error_obj(nn));
     
     XX_rec = reshape(XX, Nx, Ny);
     aaa = imresize(XX_rec, 2);
     
-    XX_array(:, nn) = XX_rec(:);
+    eps_DBIM = real((aaa + 1) * eps_b) ./ eps_o;
+    sigma_DBIM = -1 .* imag((aaa + 1) * eps_b) * w;
     
-    eps_BIM = real((aaa + 1) * eps_b) ./ eps_o;
-    sigma_BIM = -1 .* imag((aaa + 1) * eps_b) * w;
-
 end
 
 fprintf('The %ith frequency sample is finished...\n', freq_num)
