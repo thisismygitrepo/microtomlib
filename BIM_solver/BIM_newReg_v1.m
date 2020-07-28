@@ -1,4 +1,4 @@
-function [eps_BIM, sigma_BIM, error_obj, error_tmp, XX_array] = BIM_newReg_v1(freq_num, exp_Cal1_filename, exp_Cal2_filename, exp_target_filename, lambda)
+function [eps_BIM, sigma_BIM] = BIM_newReg_v1(freq_num, exp_Cal1_filename, exp_Cal2_filename, exp_target_filename, lambda)
 
 addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/bp_postprocessing/Parameters')      %%% You might need to change this folder path
 
@@ -210,21 +210,10 @@ for nn = 1 : 15
     XX = lsmr(Breg, Ereg);
     
     XX(zero_index) = 0;
-    
-    error_obj(nn) = sqrt(sum(abs(B * XX - Ess(:)) .^ 2) ./ sum(abs(Ess(:)) .^ 2));
 
-    XX_rmse = XX;
-    XX_rmse(zero_index) = 1;
-    XX_tmp_rmse = X_tmp;
-    XX_tmp_rmse(zero_index) = 1;
-    error_tmp(nn) = sqrt(sum(abs(XX_rmse - XX_tmp_rmse) .^ 2) ./ sum(abs(XX_tmp_rmse) .^ 2));
-    
-%     fprintf('...Error: %i\n', error_obj(nn));
     
     XX_rec = reshape(XX, Nx, Ny);
     aaa = imresize(XX_rec, 2);
-    
-    XX_array(:, nn) = XX_rec(:);
     
     eps_BIM = real((aaa + 1) * eps_b) ./ eps_o;
     sigma_BIM = -1 .* imag((aaa + 1) * eps_b) * w;

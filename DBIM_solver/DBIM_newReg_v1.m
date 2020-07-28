@@ -1,4 +1,4 @@
-function [eps_DBIM, sigma_DBIM, error_obj, error_tmp, XX_array] = DBIM_newReg_v1(freq_num, exp_Cal1_filename, exp_Cal2_filename, exp_target_filename, lambda)
+function [eps_DBIM, sigma_DBIM] = DBIM_newReg_v1(freq_num, exp_Cal1_filename, exp_Cal2_filename, exp_target_filename, lambda)
 
 addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/bp_postprocessing/Parameters')      %%% You might need to change this folder path
 
@@ -179,11 +179,6 @@ XX(zero_index) = 0;
 % XX = X_tmp;
 Ez_tot_BIM = zeros(total_n, src_Tx_N);
 Lambda = lambda(freq_num);
-
-error_obj = zeros(20, 1);
-error_tmp = zeros(20, 1);
-
-XX_array = zeros(Nx * Ny, 20);
 
 for nn = 1 : 15
     
