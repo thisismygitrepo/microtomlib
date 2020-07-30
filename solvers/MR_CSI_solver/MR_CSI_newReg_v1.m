@@ -9,8 +9,7 @@ load Ez_tot_MoM_array_Cal1_84freq_Alex.mat
 load Ez_tot_MoM_array_Cal2_84freq_Alex.mat
 load freq_array_CST_Alex.mat
 
-% freq_num = 43;
-% freq_num = 40;
+
 w = 2 * pi * freq_array(freq_num);
 eps_o = 8.854187817e-12;
 uo = 4e-7 * pi;  
