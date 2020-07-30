@@ -7,4 +7,6 @@ file_path = "C:\Users\s4551072\OneDrive - The University of Queensland\Pycharm\d
 cal1_path = "C:\Users\s4551072\OneDrive - The University of Queensland\Pycharm\data\simulations\wiener\cals\Cal1.s16p";
 cal2_path = "C:\Users\s4551072\OneDrive - The University of Queensland\Pycharm\data\simulations\wiener\cals\Cal2.s16p";
 
+
+% before running this, make sure your current directory is @ toml/solvers
 eps, sig = run_multiFreq_solvers("DBIM", file_path, cal1_path, cal2_path, database_path);

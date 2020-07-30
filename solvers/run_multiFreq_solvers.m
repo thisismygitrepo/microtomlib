@@ -6,16 +6,16 @@ sig = zeros(58, 50, freq_N);
 
 if solver == "BIM"
     lambda = (6 : (17 - 6) / 83 : 17) * 1e2;   %%% Adaptive lambda for traditional Tikhonov
-    addpath("solvers/BIM_solver")
+    addpath("BIM_solver")
 elseif solver == "DBIM"
     lambda = (20 : (90 - 20) / 83 : 100) * 1e2;   %%% Adaptive lambda for traditional Tikhonov
-    addpath("solvers/DBIM_solver")
+    addpath("DBIM_solver")
 elseif solver == "CSI"
     lambda = false;
-    addpath("solvers/CSI_folder")
+    addpath("CSI_folder")
 elseif solver == "MRCSI"
     lambda = false;
-    addpath("solvers/MR_CSI_solver")
+    addpath("MR_CSI_solver")
 end
 
 
