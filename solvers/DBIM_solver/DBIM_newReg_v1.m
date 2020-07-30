@@ -1,15 +1,12 @@
-function [eps_DBIM, sigma_DBIM] = DBIM_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, lambda)
-
-addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/bp_postprocessing/Parameters')      %%% You might need to change this folder path
+function [eps_DBIM, sigma_DBIM] = DBIM_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, lambda, database_path)
 
 %%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
-load doi_masks.mat
+load(database_path + "\doi_masks.mat")
 
 %%% Load parameters
-
-load Ez_tot_MoM_array_Cal1_84freq_Alex.mat
-load Ez_tot_MoM_array_Cal2_84freq_Alex.mat
-load freq_array_CST_Alex.mat
+load(database_path + "\Ez_tot_MoM_array_Cal1_84freq_Alex.mat")
+load(database_path + "\Ez_tot_MoM_array_Cal2_84freq_Alex.mat")
+load(database_path + "\freq_array_CST_Alex.mat")
 
 w = 2 * pi * freq_array(freq_num);
 eps_o = 8.854187817e-12;
@@ -216,10 +213,9 @@ for nn = 1 : 15
     
     
     XX_rec = reshape(XX, Nx, Ny);
-    aaa = imresize(XX_rec, 2);
     
-    eps_DBIM = real((aaa + 1) * eps_b) ./ eps_o;
-    sigma_DBIM = -1 .* imag((aaa + 1) * eps_b) * w;
+    eps_DBIM = real((XX_rec + 1) * eps_b) ./ eps_o;
+    sigma_DBIM = -1 .* imag((XX_rec + 1) * eps_b) * w;
     
 end
 

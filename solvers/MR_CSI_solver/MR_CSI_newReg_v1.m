@@ -1,13 +1,12 @@
-function [eps_csi, sigma_csi] = MR_CSI_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename)
+function [eps_csi, sigma_csi] = MR_CSI_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, database_path)
 
 %%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
-load doi_masks.mat
+load(database_path + "\doi_masks.mat")
 
 %%% Load parameters
-
-load Ez_tot_MoM_array_Cal1_84freq_Alex.mat
-load Ez_tot_MoM_array_Cal2_84freq_Alex.mat
-load freq_array_CST_Alex.mat
+load(database_path + "Ez_tot_MoM_array_Cal1_84freq_Alex.mat")
+load(database_path + "Ez_tot_MoM_array_Cal2_84freq_Alex.mat")
+load(database_path + "freq_array_CST_Alex.mat")
 
 
 w = 2 * pi * freq_array(freq_num);
@@ -349,10 +348,9 @@ for itr = 2 : 300
     X_csi(zero_index) = 0;
 
     X_rec_new = reshape(X_csi, Nx, Ny);
-    aaa = imresize(X_rec_new, 2);
     
-    sigma_csi = -1 .* imag((aaa + 1) * eps_b) * w;
-    eps_csi = real((aaa + 1) * eps_b) ./ eps_o;
+    sigma_csi = -1 .* imag((X_rec_new + 1) * eps_b) * w;
+    eps_csi = real((X_rec_new + 1) * eps_b) ./ eps_o;
     
     
 end
