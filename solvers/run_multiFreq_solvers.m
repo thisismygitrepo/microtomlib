@@ -23,7 +23,7 @@ cnt = 1;
 
 
 for kk = 1 : freq_N
-    tic
+    tic;
     
     if solver == "BIM"
         [eps(:, :, cnt), sig(:, :, cnt)] = BIM_newReg_v1(kk, file_path, file_path_cal1, file_path_cal2, lambda, databse_path);
@@ -36,6 +36,8 @@ for kk = 1 : freq_N
     end
     
     cnt = cnt + 1;
-    toc
+    tmp2 = toc;
 end
+disp("Total time required = ")
+display(tmp2)
 

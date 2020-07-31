@@ -2,12 +2,12 @@ function [eps_BIM, sigma_BIM] = BIM_newReg_v1(freq_num, exp_target_filename, exp
 
 
 %%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
-load(database_path + "\doi_masks.mat")
+load(database_path + "/doi_masks.mat")
 
 %%% Load parameters
-load(database_path + "\Ez_tot_MoM_array_Cal1_84freq_Alex.mat")
-load(database_path + "\Ez_tot_MoM_array_Cal2_84freq_Alex.mat")
-load(database_path + "\freq_array_CST_Alex.mat")
+load(database_path + "/Ez_tot_MoM_array_Cal1_84freq_Alex.mat")
+load(database_path + "/Ez_tot_MoM_array_Cal2_84freq_Alex.mat")
+load(database_path + "/freq_array_CST_Alex.mat")
 
 w = 2 * pi * freq_array(freq_num);
 eps_o = 8.854187817e-12;
