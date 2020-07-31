@@ -1,13 +1,26 @@
 ToML
 ==================================================================================
 
-All the codes in the folders: `BIM_solver`, "DBIM_solver", "CSI_solver", "MR_CSI_solver" are written by Lei Guo, from School of ITEE, UQ
+This repository contains codes for the 4 major tomographic solvers, namely
+* `BIM_solver`
+* `DBIM_solver`
+* `CSI_solver`
+* `MR_CSI_solver`
 
+Solvers are written by Lei Guo, from School of ITEE, UQ
 Email: l.guo3@uq.edu.au
 
-Instruction for using the code named "process_data" in all the four solvers' folder
------------------------------------------------------------------------------------
+Parallelization and optimization by Alex Al-Saffar.
+Email: programmer@usa.com
 
+
+### Results viewing functions
+* Per frequency viewer:
+    This function basically animates the results over all frequencies.
+
+* Average results viewer:
+    This function averages the results before viewing them.
+    
 You have four variables: "eps_data", "sigma_data", "freq_low", "freq_high", "show_flag".
 
 You should generate "eps_data" and "sigma_data" from the solvers (they are the calcualated permittivity and conductivity from the tomography solver).
