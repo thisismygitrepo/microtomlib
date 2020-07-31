@@ -1,4 +1,4 @@
-function [eps_DBIM, sigma_DBIM] = DBIM_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, lambda, database_path)
+function [eps_DBIM, sigma_DBIM] = DBIM_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, lambda, database_path, itr_num)
 
 %%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
 load(database_path + "\doi_masks.mat")
@@ -173,11 +173,10 @@ Ess = alpha_Ez .* Exp_case;
 
 XX = 0 * ones(total_n, 1);
 XX(zero_index) = 0;
-% XX = X_tmp;
 Ez_tot_BIM = zeros(total_n, src_Tx_N);
 Lambda = lambda(freq_num);
 
-for nn = 1 : 15
+for nn = 1 : itr_num
     
     B = [];
     B_DBIM = [];

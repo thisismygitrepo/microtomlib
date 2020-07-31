@@ -1,4 +1,4 @@
-function [eps_csi, sigma_csi] = MR_CSI_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, database_path)
+function [eps_csi, sigma_csi] = MR_CSI_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, database_path, itr_num)
 
 %%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
 load(database_path + "\doi_masks.mat")
@@ -232,8 +232,7 @@ X_rec = reshape(X_csi, Nx, Ny);
 [X_gy, X_gx] = gradient(X_rec);
 abs_gradientX_square = X_gx(:) .* conj(X_gx(:)) + X_gy(:) .* conj(X_gy(:));
 
-for itr = 2 : 300
-    tic
+for itr = 2 : itr_num
     %%% Update the contrast source (wr) and the total E field
     Ge_star_pho = (Gezz_source' * pho);
     
