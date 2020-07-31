@@ -1,4 +1,4 @@
-function [eps_csi, sigma_csi] = CSI_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, database_path)
+function [eps_csi, sigma_csi] = CSI_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, database_path, itr_num)
 
 %%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
 load(database_path + "\doi_masks.mat")
@@ -216,7 +216,7 @@ eta_s = 1 / (square_norm_sum(S_scat));
 eta_d(1) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM));
 Fd(1) = eta_d(1) * square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi);
 
-for itr = 2 : 300
+for itr = 2 : itr_num
     tic
     %%% Update the contrast source (wr) and the total E field
     Ge_star_pho = (Gezz_source' * pho);
