@@ -217,7 +217,6 @@ eta_d(1) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM));
 Fd(1) = eta_d(1) * square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi);
 
 for itr = 2 : itr_num
-    tic
     %%% Update the contrast source (wr) and the total E field
     Ge_star_pho = (Gezz_source' * pho);
     
@@ -270,7 +269,7 @@ for itr = 2 : itr_num
     
     sigma_csi = -1 .* imag((X_rec_new + 1) * eps_b) * w;
     eps_csi = real((X_rec_new + 1) * eps_b) ./ eps_o;
-
+    
 end
 
  fprintf('The %ith frequency sample is finished...\n', freq_num)   
