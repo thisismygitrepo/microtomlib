@@ -3,7 +3,7 @@ function [] = solve_simulations(idx)
 % problem. the it saves the results.
 
 database_path = "../Parameters_for_solvers";
-load("paths_names.mat", 'paths', 'names')
+load(database_path + "/paths_names.mat", 'paths', 'names')
 
 name = strtrim(names(idx, :));
 path = strtrim(paths(idx, :));
