@@ -15,7 +15,7 @@ elseif solver == "DBIM"
 elseif solver == "CSI"
     lambda = false;
     itr_num = 300;                             %%% The iteration number for CSI is usually 300~1000
-    addpath("CSI_folder")
+    addpath("CSI_solver")
 elseif solver == "MRCSI"
     lambda = false;
     itr_num = 300;                             %%% The iteration number for MR-CSI is usually 300~1000
@@ -27,8 +27,7 @@ cnt = 1;
 
 
 for kk = 1 : freq_N
-    tic;
-    
+    tic
     if solver == "BIM"
         [eps(:, :, cnt), sig(:, :, cnt)] = BIM_newReg_v1(kk, file_path, file_path_cal1, file_path_cal2, lambda, databse_path, itr_num);
     elseif solver == "CSI"
@@ -40,8 +39,7 @@ for kk = 1 : freq_N
     end
     
     cnt = cnt + 1;
-    tmp2 = toc;
+    toc
 end
-disp("Total time required = ")
-display(tmp2)
+
 

@@ -1,7 +1,7 @@
 ToML
 ==================================================================================
 
-All the codes in the folders: "BIM_solver", "DBIM_solver", "CSI_solver", "MR_CSI_solver" are written by Lei Guo, from School of ITEE, UQ
+All the codes in the folders: `BIM_solver`, "DBIM_solver", "CSI_solver", "MR_CSI_solver" are written by Lei Guo, from School of ITEE, UQ
 
 Email: l.guo3@uq.edu.au
 
