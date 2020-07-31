@@ -1,4 +1,4 @@
-function [eps_BIM, sigma_BIM] = BIM_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, lambda, database_path)
+function [eps_BIM, sigma_BIM] = BIM_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, lambda, database_path, itr_num)
 
 
 %%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
@@ -13,6 +13,7 @@ w = 2 * pi * freq_array(freq_num);
 eps_o = 8.854187817e-12;
 uo = 4e-7 * pi;  
 
+zero_index = find(doi_mask_4mm == 0);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Curve fitting for the permittivity and conductivity of coupling medium
@@ -174,12 +175,8 @@ XX(zero_index) = 0;
 Ez_tot_BIM = zeros(total_n, src_Tx_N);
 Lambda = lambda(freq_num);
 
-error_obj = zeros(20, 1);
-error_tmp = zeros(20, 1);
 
-XX_array = zeros(Nx * Ny, 20);
-
-for nn = 1 : 15
+for nn = 1 : itr_num
 %     tic
 %     fprintf('The %ith iteration\n', nn);
     
