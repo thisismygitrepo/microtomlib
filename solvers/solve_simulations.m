@@ -1,6 +1,6 @@
 function [] = solve_simulations(idx)
 % this functions recieves index, and sovles the corresponding simulation
-% problem. the it saves the results.
+% problem. the it saves the results. Designed to work on Cluster.
 
 database_path = "../Parameters_for_solvers";
 load(database_path + "/paths_names.mat", 'paths', 'names')

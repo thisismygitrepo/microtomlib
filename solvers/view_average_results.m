@@ -1,6 +1,6 @@
 function view_average_results(eps_data, sig_data, freq_low, freq_high)
 % This function (previously called process_data) is supposed to do the following:
-   % 1- Upscale the images
+   % 1- Upscale the images (by calling a function internally)
    % 2- Average the results from different frequencies
    % 3- View the results nicely in one Figure using subplots.
    % 4- Adjsut the settings of colormap to show target clearly.    

@@ -1,6 +1,6 @@
 function [eps, sig] = run_multiFreq_solvers(solver, file_path, file_path_cal1, file_path_cal2, databse_path)
 
-freq_N = 1; 
+freq_N = 84; 
 eps = zeros(58, 50, freq_N);
 sig = zeros(58, 50, freq_N);
 
