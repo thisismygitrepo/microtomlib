@@ -3,7 +3,7 @@ function [eps, sig] = view_per_freq_results(eps_data, sig_data, show_flag)
 % solvers for the purpose of better visualization.
 % If show_flag is set to true, it can do an animation of results.
 
-n, m, f = size(eps_data);
+[n, m, f] = size(eps_data);
 eps = zeros(n * 2, m * 2, f);
 sig = zeros(n * 2, m * 2, f);
 for i=1:f
