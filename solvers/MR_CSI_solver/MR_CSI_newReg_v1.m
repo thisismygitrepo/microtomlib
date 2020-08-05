@@ -55,8 +55,11 @@ src_Rx_N = length(Probes_Rx(:, 1));
 
 %%% --------------------------- Define the computation domain ----------------------------- %%%
 
-x_dash = [-115 : 4 : 115] .* 1e-3;
-y_dash = [-100 : 4 : 96] .* 1e-3;
+dx = 4e-3;
+dy = 4e-3;
+
+x_dash = [-115e-3 : dx : 115e-3];
+y_dash = [-100e-3 : dy : 96e-3];
 
 Nx = length(x_dash);
 Ny = length(y_dash);
@@ -197,6 +200,7 @@ for src = 1 : src_Tx_N
 end
 
 X_0 = sum(wr_bp_0 .* conj(u_0), 2) ./ sum(abs(u_0) .^ 2, 2);
+
 X_0(zero_index) = 0;
 
 for kk = 1 : src_Tx_N
@@ -224,12 +228,13 @@ wr_Ez_csi = wr_bp_0;
 pho = S_scat - (Gezz_source * wr_bp_0);
 Ez_tot_csi = Ez_inc_MoM + Gezz * wr_bp_0;
 r = repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi - wr_bp_0;
-eta_s = 1 / (square_norm_sum(S_scat));
-eta_d(1) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM));
-Fd(1) = eta_d(1) * square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi);
+eta_s = 1 / (square_norm_sum(S_scat, dx, dy));
+eta_d(1) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM, dx, dy));
+Fd(1) = eta_d(1) * square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi, dx, dy);
 
 X_rec = reshape(X_csi, Nx, Ny);
-[X_gy, X_gx] = gradient(X_rec);
+[X_gy, X_gx] = gradient(X_rec, y_dash, x_dash);
+% [X_gy, X_gx] = gradient(X_rec);
 abs_gradientX_square = X_gx(:) .* conj(X_gx(:)) + X_gy(:) .* conj(X_gy(:));
 
 for itr = 2 : itr_num
@@ -246,8 +251,8 @@ for itr = 2 : itr_num
     if itr == 2
         v = g_wr;
     else
-        numerator = real(sum(inner_product(g_wr, g_wr - g_wr_dash)));
-        denominator = sum(inner_product(g_wr_dash, g_wr_dash));
+        numerator = real(sum(inner_product(g_wr, g_wr - g_wr_dash, dx, dy)));
+        denominator = sum(inner_product(g_wr_dash, g_wr_dash, dx, dy));
         gama_wr(itr) = numerator / denominator;
         v = g_wr + gama_wr(itr) .* v;
     end
@@ -255,8 +260,8 @@ for itr = 2 : itr_num
     Ge_source_v= Gezz_source * v;
     Ge_v = Gezz * v;
     
-    numerator = -1 * real(sum(inner_product(g_wr, v)));
-    denominator = eta_s * square_norm_sum(Ge_source_v) + eta_d(itr - 1) * square_norm_sum(v - repmat(X_csi, 1, src_Tx_N) .* Ge_v);
+    numerator = -1 * real(sum(inner_product(g_wr, v, dx, dy)));
+    denominator = eta_s * square_norm_sum(Ge_source_v, dx, dy) + eta_d(itr - 1) * square_norm_sum(v - repmat(X_csi, 1, src_Tx_N) .* Ge_v, dx, dy);
     alpha_wr(itr) = numerator / denominator;
     
     wr_Ez_csi = wr_Ez_csi + alpha_wr(itr) .* v;
@@ -267,17 +272,18 @@ for itr = 2 : itr_num
     end
     
     %%% Update the contrast (X)
-    Fd(itr) = square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi);
-    Fs(itr) = square_norm_sum(S_scat - Gezz_source * wr_Ez_csi) ./ square_norm_sum(S_scat);
+    Fd(itr) = square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi, dx, dy);
+    Fs(itr) = square_norm_sum(S_scat - Gezz_source * wr_Ez_csi, dx, dy) ./ square_norm_sum(S_scat, dx, dy);
     
     %%% ------------------------------------- Add the multiplicative TV reguarization ----------------------------------------- %%%
-    mesh_size = al;
-    delta_square = Fd(itr) * (1 / mesh_size) ^ 1.5;
+    mesh_size = dx;
+    delta_square = Fd(itr) * (1 / mesh_size) ^ 2;
     
-    V = (al ^ 2) * Nx * Ny;
+    V = (dx ^ 2) * Nx * Ny;
     
     X_rec = reshape(X_csi, Nx, Ny);
-    [X_gy, X_gx] = gradient(X_rec);
+    [X_gy, X_gx] = gradient(X_rec, y_dash, x_dash);
+%     [X_gy, X_gx] = gradient(X_rec);
     
     abs_gradientX_square_dash = abs_gradientX_square;
     abs_gradientX_square = X_gx(:) .* conj(X_gx(:)) + X_gy(:) .* conj(X_gy(:));
@@ -287,7 +293,8 @@ for itr = 2 : itr_num
     g_TV_tmp_y = X_gy(:) ./ (abs_gradientX_square + delta_square);
     g_TV_tmp_y = reshape(g_TV_tmp_y, Nx, Ny);
     
-    g_TV_rec = (1 / V) .* divergence(g_TV_tmp_y, g_TV_tmp_x);
+    g_TV_rec = (1 / V) .* divergence(y_dash, x_dash, g_TV_tmp_y, g_TV_tmp_x);
+%     g_TV_rec = (1 / V) .* divergence(g_TV_tmp_y, g_TV_tmp_x);
     g_TV_rec = g_TV_rec(:);
     g_TV = g_TV_rec;
     
@@ -302,23 +309,24 @@ for itr = 2 : itr_num
     if itr == 2
        d = g_x;
     else
-        numerator = real(inner_product(g_x, g_x - g_x_dash));
-        denominator = inner_product(g_x_dash, g_x_dash);
+        numerator = real(inner_product(g_x, g_x - g_x_dash, dx, dy));
+        denominator = inner_product(g_x_dash, g_x_dash, dx, dy);
         gama_x(itr) = numerator / denominator;
         d = g_x + gama_x(itr) .* d;
     end
     
     A_alpha = Fs(itr);
     B_alpha = Fd(itr);
-    C_alpha = 2 * eta_d(itr - 1) * real(sum(inner_product(repmat(d, 1, src_Tx_N) .* Ez_tot_csi, repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi - wr_Ez_csi)));
-    D_alpha = eta_d(itr - 1) * square_norm_sum(repmat(d, 1, src_Tx_N) .* Ez_tot_csi);
+    C_alpha = 2 * eta_d(itr - 1) * real(sum(inner_product(repmat(d, 1, src_Tx_N) .* Ez_tot_csi, repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi - wr_Ez_csi, dx, dy)));
+    D_alpha = eta_d(itr - 1) * square_norm_sum(repmat(d, 1, src_Tx_N) .* Ez_tot_csi, dx, dy);
     
     b_alpha = (1 / sqrt(V)) .* (1 ./ sqrt(abs_gradientX_square + delta_square));
     d_rec = reshape(d, Nx, Ny);
-    [d_gy, d_gx] = gradient(d_rec);
+    [d_gy, d_gx] = gradient(d_rec, y_dash, x_dash);
+%     [d_gy, d_gx] = gradient(d_rec);
 
-    E_alpha = 2 * real(gradient_inner_product(b_alpha .* X_gx(:), b_alpha .* X_gy(:), b_alpha .* d_gx(:), b_alpha .* d_gy(:)));
-    F_alpha = gradient_inner_product(b_alpha .* d_gx(:), b_alpha .* d_gy(:), b_alpha .* d_gx(:), b_alpha .* d_gy(:));
+    E_alpha = 2 * real(gradient_inner_product(b_alpha .* X_gx(:), b_alpha .* X_gy(:), b_alpha .* d_gx(:), b_alpha .* d_gy(:), dx, dy));
+    F_alpha = gradient_inner_product(b_alpha .* d_gx(:), b_alpha .* d_gy(:), b_alpha .* d_gx(:), b_alpha .* d_gy(:), dx, dy);
     G_alpha = 1;
     
     poly = [4 * D_alpha * F_alpha; 3 * C_alpha * F_alpha + 3 * D_alpha * E_alpha; 2 * C_alpha * E_alpha + 2 * D_alpha * G_alpha + 2 * A_alpha * F_alpha + 2 * B_alpha * F_alpha; C_alpha * G_alpha + A_alpha * E_alpha + B_alpha * E_alpha];
@@ -332,7 +340,8 @@ for itr = 2 : itr_num
     
     %%% ------------------------------------- Update contrast X_csi using MR-TV ------------------------------------- %%%
     
-    X_csi = X_csi + alpha_x(itr) .* d;
+    X_csi = X_csi + alpha_x(itr) .* d; 
+    X_csi(zero_index) = 0;
     
     %%% -------------------------------------------------------------------------------------------------------------------
 
@@ -340,11 +349,9 @@ for itr = 2 : itr_num
     %%% Update the parameters in CSI (pho, r, eta_d)
     pho = S_scat - (Gezz_source * wr_Ez_csi);
     r = repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi - wr_Ez_csi;
-    eta_d(itr) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM));
+    eta_d(itr) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM, dx, dy));
     
     F_TV(itr) = sum((abs_gradientX_square + delta_square) ./ (abs_gradientX_square_dash + delta_square) * al ^ 2) ./ V;
-
-    X_csi(zero_index) = 0;
 
     X_rec_new = reshape(X_csi, Nx, Ny);
     
