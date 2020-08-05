@@ -1,3 +1,3 @@
-function [production] = gradient_inner_product(Ax, Ay, Bx, By)
+function [production] = gradient_inner_product(Ax, Ay, Bx, By, dx, dy)
 
-production = Ax.' * conj(Bx) + Ay.' * conj(By);
+production = dx * dy * (Ax.' * conj(Bx) + Ay.' * conj(By));
