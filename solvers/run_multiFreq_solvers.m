@@ -18,7 +18,7 @@ elseif solver == "CSI"
     addpath("CSI_solver")
 elseif solver == "MRCSI"
     lambda = false;
-    itr_num = 300;                             %%% The iteration number for MR-CSI is usually 300~1000
+    itr_num = 2000;                             %%% The iteration number for MR-CSI is usually 300~1000
     addpath("MR_CSI_solver")
 end
 
