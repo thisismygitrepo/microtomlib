@@ -55,8 +55,11 @@ src_Rx_N = length(Probes_Rx(:, 1));
 
 %%% --------------------------- Define the computation domain ----------------------------- %%%
 
-x_dash = [-115 : 4 : 115] .* 1e-3;
-y_dash = [-100 : 4 : 96] .* 1e-3;
+dx = 4e-3;
+dy = 4e-3;
+
+x_dash = [-115e-3 : dx : 115e-3];
+y_dash = [-100e-3 : dy : 96e-3];
 
 Nx = length(x_dash);
 Ny = length(y_dash);
@@ -212,9 +215,9 @@ wr_Ez_csi = wr_bp_0;
 pho = S_scat - (Gezz_source * wr_bp_0);
 Ez_tot_csi = Ez_inc_MoM + Gezz * wr_bp_0;
 r = repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi - wr_bp_0;
-eta_s = 1 / (square_norm_sum(S_scat));
-eta_d(1) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM));
-Fd(1) = eta_d(1) * square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi);
+eta_s = 1 / (square_norm_sum(S_scat, dx, dy));
+eta_d(1) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM, dx, dy));
+Fd(1) = eta_d(1) * square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi, dx, dy);
 
 for itr = 2 : itr_num
     %%% Update the contrast source (wr) and the total E field
@@ -230,8 +233,8 @@ for itr = 2 : itr_num
     if itr == 2
         v = g_wr;
     else
-        numerator = real(sum(inner_product(g_wr, g_wr - g_wr_dash)));
-        denominator = sum(inner_product(g_wr_dash, g_wr_dash));
+        numerator = real(sum(inner_product(g_wr, g_wr - g_wr_dash, dx, dy)));
+        denominator = sum(inner_product(g_wr_dash, g_wr_dash, dx, dy));
         gama_wr(itr) = numerator / denominator;
         v = g_wr + gama_wr(itr) .* v;
     end
@@ -239,8 +242,8 @@ for itr = 2 : itr_num
     Ge_source_v= Gezz_source * v;
     Ge_v = Gezz * v;
     
-    numerator = -1 * real(sum(inner_product(g_wr, v)));
-    denominator = eta_s * square_norm_sum(Ge_source_v) + eta_d(itr - 1) * square_norm_sum(v - repmat(X_csi, 1, src_Tx_N) .* Ge_v);
+    numerator = -1 * real(sum(inner_product(g_wr, v, dx, dy)));
+    denominator = eta_s * square_norm_sum(Ge_source_v, dx, dy) + eta_d(itr - 1) * square_norm_sum(v - repmat(X_csi, 1, src_Tx_N) .* Ge_v, dx, dy);
     alpha_wr(itr) = numerator / denominator;
     
     wr_Ez_csi = wr_Ez_csi + alpha_wr(itr) .* v;
@@ -251,8 +254,8 @@ for itr = 2 : itr_num
     end
     
     %%% Update the contrast (X)
-    Fd(itr) = square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi);
-    Fs(itr) = square_norm_sum(S_scat - Gezz_source * wr_Ez_csi) ./ square_norm_sum(S_scat);
+    Fd(itr) = square_norm_sum((repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi) - wr_Ez_csi, dx, dy);
+    Fs(itr) = square_norm_sum(S_scat - Gezz_source * wr_Ez_csi, dx, dy) ./ square_norm_sum(S_scat, dx, dy);
     
     numerator = sum(wr_Ez_csi .* conj(Ez_tot_csi), 2);
     denominator = sum(abs(Ez_tot_csi) .^ 2, 2);
@@ -263,7 +266,7 @@ for itr = 2 : itr_num
     %%% Update the parameters in CSI (pho, r, eta_d)
     pho = S_scat - (Gezz_source * wr_Ez_csi);
     r = repmat(X_csi, 1, src_Tx_N) .* Ez_tot_csi - wr_Ez_csi;
-    eta_d(itr) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM));
+    eta_d(itr) = 1 / (square_norm_sum(repmat(X_csi, 1, src_Tx_N) .* Ez_inc_MoM, dx, dy));
         
     X_rec_new = reshape(X_csi, Nx, Ny);
     
