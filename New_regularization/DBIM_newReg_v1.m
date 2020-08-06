@@ -1,30 +1,13 @@
 clc
 clear
 
-addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/bp_postprocessing')
 
-%%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
-load doi_masks.mat
 
-%%% Load the regulizer
-addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/regularizers')
-load tik_matrix_100d_4mm_800MHz.mat
-
-%%% Load parameters
-addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/Parameters')
-load Ez_tot_MoM_array_Cal1_84freq.mat
-load Ez_tot_MoM_array_Cal2_84freq.mat
-load freq_array_CST.mat
-
-freq_num = 30;
 
 w = 2 * pi * freq_array(freq_num);
 eps_o = 8.854187817e-12;
 uo = 4e-7 * pi;  
 
-exp_Cal1_filename = 'Cal1.s16p';
-exp_Cal2_filename = 'Cal2.s16p';
-exp_target_filename = 'Bleeding_z00.mat';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Curve fitting for the permittivity and conductivity of coupling medium

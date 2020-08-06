@@ -1,30 +1,19 @@
-function [eps_BIM, sigma_BIM, error_obj, error_tmp, XX_array] = BIM_newReg_v1(freq_num, exp_Cal1_filename, exp_Cal2_filename, exp_target_filename)
-
-addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/bp_postprocessing')
-addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/bp_postprocessing/Parameters')
-addpath('/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/regularizers')
+function [eps_BIM, sigma_BIM, error_obj, error_tmp, XX_array] = BIM_newReg_v1(freq_num, exp_target_filename, exp_Cal1_filename, exp_Cal2_filename, database_path, reg_path)
 
 %%% The DOI has the physical range of x: -100mm : 100mm, y: -115mm : 115mm
-load doi_masks.mat
+load(database_path + "/doi_masks.mat")
 
 %%% Load the regulizer
-load tik_matrix_1500d_4mm_800MHz.mat
+load(reg_path + "/tik_matrix_1500d_4mm_800MHz.mat")
 
 %%% Load parameters
-
-load Ez_tot_MoM_array_Cal1_84freq.mat
-load Ez_tot_MoM_array_Cal2_84freq.mat
-load freq_array_CST.mat
-
-% freq_num = 43;
+load(database_path + "/Ez_tot_MoM_array_Cal1_84freq_Alex.mat")
+load(database_path + "/Ez_tot_MoM_array_Cal2_84freq_Alex.mat")
+load(database_path + "/freq_array_CST_Alex.mat")
 
 w = 2 * pi * freq_array(freq_num);
 eps_o = 8.854187817e-12;
-uo = 4e-7 * pi;  
-
-% exp_Cal1_filename = 'Cal1.s16p';
-% exp_Cal2_filename = 'Cal2.s16p';
-% exp_target_filename = 'Bleeding_z00.mat';
+uo = 4e-7 * pi;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
