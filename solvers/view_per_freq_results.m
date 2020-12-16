@@ -1,4 +1,5 @@
 function [eps, sig] = view_per_freq_results(eps_data, sig_data, show_flag)
+
 % This function doubles the size of the image coming out from tomographic
 % solvers for the purpose of better visualization.
 % If show_flag is set to true, it can do an animation of results.
