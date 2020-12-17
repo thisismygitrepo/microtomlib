@@ -1,20 +1,12 @@
 clc
 clear
 
-machine = "Lei";
+home = string(java.lang.System.getProperty('user.home'));
+database_path = fullfile(home, "my_g_drive/emvision/Algorithm/toml_data/solvers/Parameters_for_solvers");
+file_path = fullfile(home, "my_g_drive/emvision/Algorithm/toml_data/simulations/wiener/large_stroke_simulations/example1/wIXI087-Guys-0768-T1_t0_1.s16p");
+cal1_path = fullfile(home, "my_g_drive/emvision/Algorithm/toml_data/simulations/wiener/cals/Cal1.s16p");
+cal2_path = fullfile(home, "my_g_drive/emvision/Algorithm/toml_data/simulations/wiener/cals/Cal2.s16p");
 
-if machine == "Alex"
-    database_path = "C:\Users\s4551072\OneDrive - The University of Queensland\Pycharm\data\Parameters_for_solvers";
-    file_path = "C:\Users\s4551072\OneDrive - The University of Queensland\Pycharm\data\simulations\wiener\large_stroke_simulations\example1\wIXI087-Guys-0768-T1_t0_1.s16p";
-    cal1_path = "C:\Users\s4551072\OneDrive - The University of Queensland\Pycharm\data\simulations\wiener\cals\Cal1.s16p";
-    cal2_path = "C:\Users\s4551072\OneDrive - The University of Queensland\Pycharm\data\simulations\wiener\cals\Cal2.s16p";
-
-elseif machine == "Lei"
-    database_path = "/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/Parameters_for_solvers";
-    file_path = "/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/simulations/wiener/large_stroke_simulations/example2/wIXI073-Guys-0755-T1_t3_1.s16p";
-    cal1_path = "/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/simulations/wiener/cals/Cal1.s16p";
-    cal2_path = "/Users/uqlguo3/The University of Queensland/Ahmed Al-Saffar - data/simulations/wiener/cals/Cal2.s16p";
-end
 
 % before running this, make sure your current directory is @ toml/solvers
 [eps, sig] = run_multiFreq_solvers("MRCSI", file_path, cal1_path, cal2_path, database_path);

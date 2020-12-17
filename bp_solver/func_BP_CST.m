@@ -85,6 +85,12 @@ total_n = length(Axis_x);
 
 I = eye(total_n);
 
+home = string(java.lang.System.getProperty('user.home'));
+data_path = fullfile(home, 'my_g_drive/emvision/Algorithm/toml_data/bp_solver/Parameters');
+source_data = load(fullfile(data_path, "Gezz.mat"));
+green_func_path = fullfile(data_path, "Gezz_" + string(freq(freq_num)) + "MHz");
+data = load(green_func_path);
+
 if freq_num == 1
     load Gezz_700MHz Gezz
     load Gezz_source_700MHz Gezz_source

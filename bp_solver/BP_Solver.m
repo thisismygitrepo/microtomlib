@@ -25,9 +25,9 @@
 clc
 clear
 
-addpath('./Parameters')
-path1 = 'D:\RESULTS\healthy47m\sparams';
-path2 = 'D:\RESULTS\target47m\sparams';
+home = java.lang.System.getProperty('user.home');
+path1 = fullfile(home, 'my_data', 'healthy47m/sparams');
+path2 = fullfile(home, 'my_data', 'target47m/sparams');
 
 
 files1 = dir(path1);
