@@ -25,9 +25,9 @@
 clc
 clear
 
-home = java.lang.System.getProperty('user.home');
-path1 = fullfile(home, 'my_data', 'healthy47m/sparams');
-path2 = fullfile(home, 'my_data', 'target47m/sparams');
+pm = path_manager();
+path1 = fullfile(pm.home, 'my_data', 'healthy47m/sparams');
+path2 = fullfile(pm.home, 'my_data', 'target47m/sparams');
 
 
 files1 = dir(path1);

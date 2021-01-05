@@ -21,18 +21,18 @@
 %%% Email: l.guo3@uq.edu.au
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Alex's comments:
-There is no eps_BP function as indicated in the first line. The first function returns both eps and sig.
-According to the Sparams that I supplied, there's no such fraction frequencies as the ones used in the function.
-Why is it that empty system is used, despite teh fact that it is not practically measured.
-Lei usually uses 4mm and then upsample the output image to increase the resolution by 2 (making it look like 2mm).
 
+
+Alex's comments: 
+* According to the Sparams that I supplied, there's no such fraction frequencies as the ones used in the function.
+* Why is it that empty system is used, despite the fact that it is not practically measured.
+* Lei usually uses 4mm and then upsample the output image to increase the resolution by 2 (making it look like 2mm).
+* How to generate results with the same meshing specs as done in DeepHead?
+* What are the values of permittivity outside the domain of interest?
+* What is the geometry of the results? I.e. where is antenna one located in the outcome image when shown as is (coordinates 0, 0 at the top)
 
 func_BP_CST_with_empty
 This is the same as func_BP_CST except that it uses the empty system in addition to two cals. Notice that in reality, at least at the time of writing this, we don't have empty domain measurement so this is not practical. We want the tuning process in reality be similar to that done in the experiment. This function with this name is not used. If you want to make it used remove _with_empty suffix and avoid name collission with the function alredy with that name.
 
-BP_results_expertiments give output of BP when input is s params from MC3a with 9 real human heads. No ground truth is available.
 
-BP_results_expertiments_0bg is the zero backgrund version. Originally, Lie used 52 in the invalid region of the image.
-Notice that I did not get the code used to generate those, I just got the outcome (9) cases. May be it is the same code?
 

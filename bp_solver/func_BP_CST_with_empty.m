@@ -1,4 +1,4 @@
-function [eps_BP, sigma_BP] = func_BP_CST(freq_num, target_filename, resolution)
+function [eps_BP, sigma_BP] = func_BP_CST_with_empty(freq_num, target_filename, resolution)
 
 freq = [701; 750.5; 800; 851; 900.5; 950; 1001; 1050.5; 1100; 1151; 1200.5; 1250; 1301] .* 1e6;
 w = 2 * pi * freq(freq_num);
