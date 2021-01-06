@@ -2,11 +2,16 @@
 classdef DOI
     properties
         % We are interested in the following Physical Space:
-        doi = [-100, 100, -115, 115];  % xmin xmax ymin ymax
+        doi = [-100, 100, -115, 115];  % xmin xmax ymin ymax. 
+        % The center of the array is thought of as the origin in above DOI.
         ant_xy = DOI.readAntennaLocations();
         ant_ind;
         res;
         mask;
+        x_axis;
+        y_axis;
+        cell_x;
+        cell_y;
     end
     
     methods(Static)
@@ -19,19 +24,21 @@ classdef DOI
     
     methods
         function obj = DOI(res)
+            % Takes in on parameter: resolution (res)
             obj.res = res;
-            obj.ant_ind = obj.getAntennaIndicesFromLocations();
+            obj = obj.meshDOI();
+            obj.ant_ind = obj.getIndexFromLocation(obj.ant_xy);
             obj.mask = obj.getMask();
         end
         
-        function [x, y] = meshDOI(obj)
+        function obj = meshDOI(obj)
 
             % now let us mesh it with a given resolution
             
-            xx = obj.doi(1):obj.res:obj.doi(2) - obj.res;
-            yy = obj.doi(3):obj.res:obj.doi(4);
+            obj.x_axis = obj.doi(1):obj.res:obj.doi(2) - obj.res;
+            obj.y_axis = obj.doi(3):obj.res:obj.doi(4);
 
-            [x, y] = meshgrid(xx, yy);
+            [obj.cell_x, obj.cell_y] = meshgrid(obj.x_axis, obj.y_axis);
             % At this point, 4 things happend:
             % 1- The physical x axis has become the columns of the image.
             % 2- The physical y axis has now become the rows of the image.
@@ -50,39 +57,32 @@ classdef DOI
         end
 
         function mask = getMask(obj)
-            % Takes in Resolution in mm units and returns mask image.
-
-            [x, y] = obj.meshDOI();
             a = 217; %  Simplistic assumptions about the area being an ellipse.
             b = 174;  % these are the major and minor diagonals.
 
-            mask = (y .^ 2 / (0.5 * a) .^ 2 + x .^ 2 / (0.5 * b) .^ 2) <= 1;
+            mask = (obj.cell_y .^ 2 / (0.5 * a) .^ 2 + obj.cell_x .^ 2 / (0.5 * b) .^ 2) <= 1;
         end
         
-        
-        function ant_ind = getAntennaIndicesFromLocations(obj)
-            % takes in an array xy of size N x 2 has physical locations.
-            % returns an array of the same size has indices in the meshed
-            % image of these physical locations.
-            
-            xx = obj.doi(1):obj.res:obj.doi(2) - obj.res;
-            yy = obj.doi(3):obj.res:obj.doi(4);
-            xy = obj.ant_xy;
-            ant_ind = zeros(size(obj.ant_xy));
-            
-            for i=1:length(xy)
-                x = xy(i, 1);
-                q = find(xx > x);
-                ant_ind(i, 2) = q(1) - 1;
-                
-                y = xy(i, 2);
-                q = find(yy > y);
-                ant_ind(i, 1) = q(1) - 1;
-            end
+        function loc = getLocationFromIndex(obj, cell_idx)
+           y = obj.doi(3) + (cell_idx(:, 1) - 1) * obj.res;  % get y from row
+           x = obj.doi(1) + (cell_idx(:, 2) - 1) * obj.res;  % get x from col
+           loc = [x, y];
+        end
+ 
+        function ind = getIndexFromLocation(obj, xy)
+           ind = zeros(size(xy), 'uint32');
+           tmp_x = obj.x_axis >= xy(:, 1);  % each row of xy has N column comparisons.
+           tmp_y = obj.y_axis >= xy(:, 2);  % each row of xy has N column comparisons.
+           % find function only works per vector.
+           [num_points, ~] = size(xy);
+           for i=1: num_points
+               col = find(tmp_x(i, :), 1, 'first') - 1;  % find acts per column
+               row = find(tmp_y(i, :), 1, 'first') - 1;
+               ind(i, :) = [row, col];
+           end
         end
         
     end
     
 end
-
 
