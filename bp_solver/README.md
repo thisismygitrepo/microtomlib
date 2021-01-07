@@ -21,8 +21,8 @@
 %%% Email: l.guo3@uq.edu.au
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
+ 
+ 
 Alex's comments: 
 * According to the Sparams that I supplied, there's no such fraction frequencies as the ones used in the function.
 * Why is it that empty system is used, despite the fact that it is not practically measured.
@@ -36,3 +36,10 @@ This is the same as func_BP_CST except that it uses the empty system in addition
 
 
 
+
+Lei's comments (07/01/2021):
+* A new function named 'func_BP_CST_dynamic.m' is added. This is an interface function of the BP solver. You still need to write your own code to visit all data from winner simulation and pass them into this interface function (I think you have done it and the function is named BP_Solver.m)
+* You need five input parameters for 'func_BP_CST_dynamic.m'. The first one is the frequency (you can input any frequency such 856.35 MHz now). The second one is the file name of target, the third and fourth ones are the file names of the calibration phantoms (they either from CST or measurement), and the last one is the resolution (although you can specify any value of resolution, but I don't suggest to go beyond 2 because it will take huge time to calculate the Green functions)
+* A new function named 'MoM_GreenFunc.m' is added. You don't need to worry about this function because it is only called within 'func_BP_CST_dynamic.m' 
+* The code named 'test_newBP_solver.m' is only used for testing 'func_BP_CST_dynamic.m'. You can delete or hide it if you want
+* A new function named 'build_Exp_Cal_model.m' is added. You don't need to worry about this function because it is only called in 'MoM_GreenFunc.m'
