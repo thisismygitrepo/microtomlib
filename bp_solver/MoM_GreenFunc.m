@@ -1,4 +1,4 @@
-function [Ess_Cal1, Ess_Cal2, Gezz, Gezz_source] = MoM_GreenFunc(freq, resolution, DOI_setting, Ez_inc_MoM, eps_r_b, sigma_b, Cal1_eps, Cal1_sigma, Cal2_eps, Cal2_sigma, source_num)
+function green = MoM_GreenFunc(freq, DOI_setting, Ez_inc_MoM, eps_r_b, sigma_b, Cal1_eps, Cal1_sigma, Cal2_eps, Cal2_sigma, source_num)
 
 eps_o = 8.854187817e-12;
 uo = 4e-7 * pi;  
@@ -61,7 +61,7 @@ X_Cal2 = X_Cal2(:);
 
 %%% ---------------------------- Build the Green function ----------------------------- %%%
 
-al = resolution * 1e-3;
+al = DOI_setting.res * 1e-3;
 a = al / (sqrt(pi));
 
 total_n = length(Axis_x);
@@ -112,6 +112,11 @@ Ess_Cal1 = Gezz_source * wr_Ez_Cal1;
 
 wr_Ez_Cal2 = repmat(X_Cal2, 1, src_Tx_N) .* Ez_tot_Cal2;
 Ess_Cal2 = Gezz_source * wr_Ez_Cal2;
+
+green.Ess_Cal1 = Ess_Cal1;
+green.Ess_Cal2 = Ess_Cal2;
+green.Gezz = Gezz;
+green.Gezz_source = Gezz_source;
 
 fprintf('Calculation of Green functions and MoM data for Cal1 and Cal2 are finished...\n');
 
