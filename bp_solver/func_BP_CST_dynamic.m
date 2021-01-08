@@ -150,6 +150,7 @@ S_scat = alpha_Ez .* CST_case + belta_Ez;
 
 %%% ---------------------------- The BP solver --------------------------- %%%
 
+
 CST_model_mask = DOI_setting.mask;
 zero_index = find(CST_model_mask == 0);
 
@@ -177,25 +178,6 @@ eps_BP = real((aaa + 1) * eps_b) ./ eps_o;
 
 sigma_BP(zero_index) = 0;
 eps_BP(zero_index) = 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

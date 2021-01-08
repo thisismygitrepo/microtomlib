@@ -3,6 +3,7 @@ classdef DOI
     properties
         % We are interested in the following Physical Space:
         doi = [-100, 100, -115, 115];  % xmin xmax ymin ymax. 
+        source_num = 16;
         % The center of the array is thought of as the origin in above DOI.
         ant_xy = DOI.readAntennaLocations();
         ant_ind;
