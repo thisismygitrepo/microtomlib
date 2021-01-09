@@ -1,4 +1,4 @@
-function [eps_gama, sigma_gama] = build_Exp_Cal_model(x_dash, y_dash, eps_r, sigma, eps_r_b, sigma_b)
+function [eps_gama, sigma_gama] = build_Exp_Cal_model_expedited(x_dash, y_dash, eps_r, sigma, eps_r_b, sigma_b)
 
 center_x = 0;
 center_y = 0;
@@ -11,25 +11,16 @@ Ny = length(y_dash);
 
 [Axis_x, Axis_y] = ndgrid(x_dash, y_dash);
 
-eps_gama = zeros(Nx, Ny);
-sigma_gama = zeros(Nx, Ny);
+eps_gama = ones(Nx, Ny) * eps_r_b;
+sigma_gama = ones(Nx, Ny) * sigma_b;    
 
-for ii = 1 : Nx
-    for jj = 1 : Ny
         
-        xx = Axis_x(ii, jj);
-        yy = Axis_y(ii, jj);
+pho = (Axis_x - center_x) .^ 2 / X_radius ^ 2 + (Axis_y - center_y) .^ 2 / Y_radius ^ 2;
+
+
+eps_gama(pho <= 1) = eps_r;
+sigma_gama(pho <= 1) = sigma;
+
         
-        pho = (xx - center_x) ^ 2 / X_radius ^ 2 + (yy - center_y) ^ 2 / Y_radius ^ 2;
-        
-        if pho <= 1
-            eps_gama(ii, jj) = eps_r;
-            sigma_gama(ii, jj) = sigma;
-        else
-            eps_gama(ii, jj) = eps_r_b;
-            sigma_gama(ii, jj) = sigma_b;
-        end
-    end
 end
-        
         
