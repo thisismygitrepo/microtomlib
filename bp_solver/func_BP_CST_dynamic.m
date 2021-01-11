@@ -75,14 +75,12 @@ end
 
 green_path = pm.home + "/cache/BPgreen" + string(freq) + ".mat";
 green_path = char(green_path);
-if exist(green_path, 'file') == 0
-
-green = MoM_GreenFunc(freq, DOI_setting, Ez_inc_MoM, eps_r_b, sigma_b, Cal1_eps, Cal1_sigma, Cal2_eps, Cal2_sigma, src_Tx_N);
-
-save(green_path, "green")
-else
-green = load(green_path);
-green = green.green;
+try
+    green = load(green_path);
+    green = green.green;
+catch
+    green = MoM_GreenFunc(freq, DOI_setting, Ez_inc_MoM, eps_r_b, sigma_b, Cal1_eps, Cal1_sigma, Cal2_eps, Cal2_sigma, src_Tx_N);
+    save(green_path, "green")
 end
 
 %%% ---------------------------- Do the calibration --------------------------- %%%
