@@ -8,7 +8,6 @@ function [eps_BP, sigma_BP] = func_BP_CST_dynamic(freq, resolution, target_filen
 
 pm = path_manager();
 const = load(pm.join(pm.gdrive, "emvision\Algorithm\toml_data\system\em_const.mat"));
-
 w = 2 * pi * freq;
 
 %%% ----------------- We do the curve fitting here to get EPs of coupling medium and calibration phantoms under arbitary frequency -----------------
@@ -73,8 +72,18 @@ for src_dash = 1 : src_Tx_N
     
 end
 
+
+green_path = pm.home + "/cache/BPgreen" + string(freq) + ".mat";
+green_path = char(green_path);
+if exist(green_path, 'file') == 0
+
 green = MoM_GreenFunc(freq, DOI_setting, Ez_inc_MoM, eps_r_b, sigma_b, Cal1_eps, Cal1_sigma, Cal2_eps, Cal2_sigma, src_Tx_N);
 
+save(green_path, "green")
+else
+green = load(green_path);
+green = green.green;
+end
 
 %%% ---------------------------- Do the calibration --------------------------- %%%
 
