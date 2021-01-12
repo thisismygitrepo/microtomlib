@@ -78,6 +78,7 @@ green_path = char(green_path);
 try
     green = load(green_path);
     green = green.green;
+    fprintf('Green function loaded from cache...\n');
 catch
     green = MoM_GreenFunc(freq, DOI_setting, Ez_inc_MoM, eps_r_b, sigma_b, Cal1_eps, Cal1_sigma, Cal2_eps, Cal2_sigma, src_Tx_N);
     save(green_path, "green")
