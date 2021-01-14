@@ -1,8 +1,13 @@
 function [eps_BP, sigma_BP] = func_BP_CST_dynamic(freq, resolution, target_filename, Cal1_filename, Cal2_filename)
 
-%%% This is a new version of BP solver which does not need additional parameters (but we do need
-%%% three input arguments, the "frequency" (not freq_num now, so you can choose any frequency),
+
 %%% the "target_filename" which heads to the S-parameter file, and "resolution" that will be passed to DOI class
+
+%%% Technical note: Cals are used here for the purpose of matching input
+%%% data coming from 3D domain (whether reality or CST simulations) match
+%%% the 2D nature of BP algorithm. This is contrast to using them for
+%%% matching simulation to reality or the other direction.
+
 
 %%% --------------------------------------- Define some basic EM constants ---------------------------------------------
 
