@@ -145,7 +145,7 @@ function [x, istop, itn, normr, normAr, normA, condA, normx]...
 
   if explicitA
     v = A'*u;
-    [m n] = size(A);
+    [m, n] = size(A);
   else  
     v = A(u,2);
     m = size(b,1);
