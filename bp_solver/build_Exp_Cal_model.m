@@ -1,4 +1,4 @@
-function [eps_gama, sigma_gama] = build_Exp_Cal_model_expedited(x_dash, y_dash, eps_r, sigma, eps_r_b, sigma_b)
+function [eps_gama, sigma_gama] = build_Exp_Cal_model(x_dash, y_dash, eps_r, sigma, eps_r_b, sigma_b)
 
 center_x = 0;
 center_y = 0;

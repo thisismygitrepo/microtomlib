@@ -12,9 +12,9 @@ pm = path_manager();
 
 if source == "simulation"
 
-    target_filename = pm.join(pm.gdrive, "\emvision\Algorithm\toml_data\simulations\wiener\large_stroke_simulations\example1\wIXI087-Guys-0768-T1_t0_1.s16p");
-    Cal1_filename = pm.join(pm.gdrive, "emvision\Algorithm\toml_data\simulations\wiener\cals\Cal1.s16p");
-    Cal2_filename = pm.join(pm.gdrive, "/emvision/Algorithm/toml_data\simulations\wiener\cals\Cal2.s16p");
+    target_filename = pm.join(pm.gdrive, "emvision/Algorithm/toml_data/simulations\wiener\large_stroke_simulations\example1\wIXI087-Guys-0768-T1_t0_1.s16p");
+    Cal1_filename = pm.join(pm.gdrive, "emvision/Algorithm/toml_data\simulations\wiener\cals\Cal1.s16p");
+    Cal2_filename = pm.join(pm.gdrive, "emvision/Algorithm/toml_data\simulations\wiener\cals\Cal2.s16p");
 
 elseif source == "PA"
 
