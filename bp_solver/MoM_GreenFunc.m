@@ -115,7 +115,7 @@ Ess_Cal2 = Gezz_source * wr_Ez_Cal2;
 
 green.Ess_Cal1 = Ess_Cal1;
 green.Ess_Cal2 = Ess_Cal2;
-green.Gezz = Gezz;
+green.Gezz = -1 * Gezz;
 green.Gezz_source = Gezz_source;
 
 fprintf('Calculation of Green functions and MoM data for Cal1 and Cal2 are finished...\n');

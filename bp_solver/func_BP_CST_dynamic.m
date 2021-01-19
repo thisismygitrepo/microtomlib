@@ -1,4 +1,4 @@
-function [eps_BP, sigma_BP] = func_BP_CST_dynamic(freq, resolution, target_filename, Cal1_filename, Cal2_filename)
+function [eps_BP, sigma_BP] = func_BP_CST_dynamic(freq, resolution, target_filename, Cal1_filename, Cal2_filename, Incident_filename)
 
 
 %%% the "target_filename" which heads to the S-parameter file, and "resolution" that will be passed to DOI class
@@ -93,9 +93,11 @@ end
 
 CST_Cal1_struct = sparameters(Cal1_filename);
 CST_Cal2_struct = sparameters(Cal2_filename);
-
 CST_Cal1 = CST_Cal1_struct.Parameters;
 CST_Cal2 = CST_Cal2_struct.Parameters;
+
+CST_case_struct = sparameters(target_filename);
+CST_case = CST_case_struct.Parameters;
 
 freq_array_CST = CST_Cal1_struct.Frequencies;
 
@@ -104,11 +106,21 @@ freq_array_CST = CST_Cal1_struct.Frequencies;
 CST_Cal1 = CST_Cal1(:, :, freq_idx);
 CST_Cal2 = CST_Cal2(:, :, freq_idx);
 
+CST_case = CST_case(:, :, freq_idx);
+
+if nargin == 6
+    CST_Inc_struct = sparameters(Incident_filename);
+    CST_Inc = CST_Inc_struct.Parameters;
+    CST_Inc = CST_Inc(:, :, freq_idx);
+    
+    CST_Cal1 = CST_Cal1 - CST_Inc;
+    CST_Cal2 = CST_Cal2 - CST_Inc;
+    
+    CST_case = CST_case - CST_Inc;
+end
+
 alpha_Ez = (green.Ess_Cal1 - green.Ess_Cal2) ./ (CST_Cal1 - CST_Cal2);
 belta_Ez = green.Ess_Cal1 - alpha_Ez .* CST_Cal1;
-
-CST_case_struct = sparameters(target_filename);
-CST_case = CST_case_struct.Parameters;
 
 S_scat = alpha_Ez .* CST_case + belta_Ez;
 
