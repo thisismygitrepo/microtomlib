@@ -79,43 +79,29 @@ end
 
 
 green_path = pm.home + "/cache/BPgreen" + string(freq) + ".mat";
-green_path = char(green_path);
+green_path = char(green_path);  % path could be a symlink from home to somewhere else.
 try
     green = load(green_path);
     green = green.green;
     fprintf('Green function loaded from cache...\n');
 catch
     green = MoM_GreenFunc(freq, DOI_setting, Ez_inc_MoM, eps_r_b, sigma_b, Cal1_eps, Cal1_sigma, Cal2_eps, Cal2_sigma, src_Tx_N);
-    save(green_path, "green")
+    if exist(pm.data + "/cache", "dir") ~= 0
+        save(green_path, "green");
+    end
 end
+
 
 %%% ---------------------------- Do the calibration --------------------------- %%%
 
-CST_Cal1_struct = sparameters(Cal1_filename);
-CST_Cal2_struct = sparameters(Cal2_filename);
-CST_Cal1 = CST_Cal1_struct.Parameters;
-CST_Cal2 = CST_Cal2_struct.Parameters;
-
-CST_case_struct = sparameters(target_filename);
-CST_case = CST_case_struct.Parameters;
-
-freq_array_CST = CST_Cal1_struct.Frequencies;
-
-[~, freq_idx] = min(abs((freq_array_CST - freq)));     %%% Find the corresponding frequency index in the CST or measurement data
-
-CST_Cal1 = CST_Cal1(:, :, freq_idx);
-CST_Cal2 = CST_Cal2(:, :, freq_idx);
-
-CST_case = CST_case(:, :, freq_idx);
+CST_Cal1 = sparameters(Cal1_filename).rfinterp1(freq).Parameters;
+CST_Cal2 = sparameters(Cal2_filename).rfinterp1(freq).Parameters;
+CST_case = sparameters(target_filename).rfinterp1(freq).Parameters;
 
 if nargin == 6
-    CST_Inc_struct = sparameters(Incident_filename);
-    CST_Inc = CST_Inc_struct.Parameters;
-    CST_Inc = CST_Inc(:, :, freq_idx);
-    
+    CST_Inc = sparameters(Incident_filename).rfinterp1(freq).Parameters;
     CST_Cal1 = CST_Cal1 - CST_Inc;
     CST_Cal2 = CST_Cal2 - CST_Inc;
-    
     CST_case = CST_case - CST_Inc;
 end
 
