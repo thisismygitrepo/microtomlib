@@ -1,21 +1,22 @@
 clc
 clear
 
+reg_path = pm.join(pm.gdrive, "emvision/Algorithm/toml_data/regularizers");
+file_path = pm.join(pm.gdrive, "emvision/Algorithm/toml_data/simulations/wiener/large_stroke_simulations/example1/wIXI087-Guys-0768-T1_t0_1.s16p");
+cal1_path = pm.join(pm.gdrive, "emvision/Algorithm/toml_data/simulations/wiener/cals/Cal1.s16p");
+cal2_path = pm.join(pm.gdrive, "emvision/Algorithm/toml_data/simulations/wiener/cals/Cal2.s16p");
+
+
 freq_N = 84; 
 
 eps_DBIM = zeros(58 * 2, 50 * 2, freq_N);
 sigma_DBIM = zeros(58 * 2, 50 * 2, freq_N);
-
-cnt = 1;
-file_name_Cal1 = 'CAL1.s16p';
-file_name_Cal2 = 'CAL2.s16p';
-file_name_target = 'bleeding_z00.mat';
-
 error_obj = zeros(20, freq_N);
 error_tmp = zeros(20, freq_N);
 
 XX_array = zeros(58 * 50, 20, freq_N);
 
+cnt = 1;
 for kk = 40 : 40
     tic
     

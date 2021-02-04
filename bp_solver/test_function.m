@@ -18,9 +18,9 @@ if source == "simulation"
     incident_filename = pm.join(pm.gdrive, "emvision\Algorithm\toml_data\simulations\wiener\cals\S_Incident.s16p");
 
     
-    target_filename = pm.join(pm.gdrive, "emvision\Platform\System Simulations\Alex\Results\BP_Solver_Lei\105014_1.s16p");
-    Cal1_filename = pm.join(pm.gdrive, "emvision\Platform\System Simulations\Alex\Results\BP_Solver_Lei\Parameters\Cal1.s16p");
-    Cal2_filename = pm.join(pm.gdrive, "emvision\Platform\System Simulations\Alex\Results\BP_Solver_Lei\Parameters\Cal2.s16p");
+%     target_filename = pm.join(pm.gdrive, "emvision\Platform\System Simulations\Alex\Results\BP_Solver_Lei\105014_1.s16p");
+%     Cal1_filename = pm.join(pm.gdrive, "emvision\Platform\System Simulations\Alex\Results\BP_Solver_Lei\Parameters\Cal1.s16p");
+%     Cal2_filename = pm.join(pm.gdrive, "emvision\Platform\System Simulations\Alex\Results\BP_Solver_Lei\Parameters\Cal2.s16p");
 
 elseif source == "PA"
 
@@ -35,7 +35,7 @@ end
 tic
 [eps_BP, sigma_BP] = func_BP_CST_dynamic(700e6, 4, target_filename, cal1_filename, cal2_filename, incident_filename); 
 mkdir results
-save("results/" + source + "_" + "results2.mat", "eps_BP", "sigma_BP")
+save("results/" + source + "_" + "results.mat", "eps_BP", "sigma_BP")
 toc
 
 

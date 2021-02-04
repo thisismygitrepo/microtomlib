@@ -11,6 +11,7 @@ function [eps_BP, sigma_BP] = func_BP_CST_dynamic(freq, resolution, target_filen
 
 %%% --------------------------------------- Define some basic EM constants ---------------------------------------------
 
+addpath('../tomlib')
 pm = path_manager();
 const = load(pm.join(pm.gdrive, "emvision\Algorithm\toml_data\system\em_const.mat"));
 w = 2 * pi * freq;
