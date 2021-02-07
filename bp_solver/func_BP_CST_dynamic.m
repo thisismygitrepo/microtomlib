@@ -11,14 +11,13 @@ function [eps_BP, sigma_BP] = func_BP_CST_dynamic(freq, resolution, target_filen
 
 %%% --------------------------------------- Define some basic EM constants ---------------------------------------------
 
-addpath('../tomlib')
 pm = path_manager();
+pm.add_tomlib()
 const = load(pm.join(pm.gdrive, "emvision\Algorithm\toml_data\system\em_const.mat"));
 w = 2 * pi * freq;
 
 %%% ----------------- We do the curve fitting here to get EPs of coupling medium and calibration phantoms under arbitary frequency -----------------
 
-pm = path_manager();
 %%% Fit the EPs of coupling medium
 [eps_r_b, eps_pp_b] = getProperties(pm.join(pm.gdrive, "/emvision\Algorithm\toml_data\system\Material Properties\cm.txt"), freq);
 sigma_b = eps_pp_b * w * const.eps_o;
