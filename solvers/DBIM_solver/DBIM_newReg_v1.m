@@ -103,7 +103,6 @@ for src_dash = 1 : src_Tx_N
     
 end
 
-zero_index = find(doi_mask_4mm == 0);
 
 %%% ---------------------------- Build the Green function ----------------------------- %%%
 
@@ -172,7 +171,7 @@ Ess = alpha_Ez .* Exp_case;
 %%% ----------------------------------------------------- The BIM inverse solver -----------------------------------------------------
 
 XX = 0 * ones(total_n, 1);
-XX(zero_index) = 0;
+XX(stp.maskp) = 0;
 Ez_tot_BIM = zeros(total_n, src_Tx_N);
 Lambda = lambda(freq_num);
 
@@ -208,7 +207,7 @@ for nn = 1 : itr_num
     delta_XX = lsmr(B_DBIM, delta_E_scat(:), Lambda);
     
     XX = XX + delta_XX;
-    XX(zero_index) = 0;
+    XX(stp.maskp) = 0;
     
     
     XX_rec = reshape(XX, Nx, Ny);

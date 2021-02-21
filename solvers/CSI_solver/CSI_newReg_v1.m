@@ -107,7 +107,6 @@ for src_dash = 1 : src_Tx_N
     
 end
 
-zero_index = find(doi_mask_4mm == 0);
 
 %%% ---------------------------- Build the Green function ----------------------------- %%%
 
@@ -192,10 +191,10 @@ for src = 1 : src_Tx_N
 end
 
 X_0 = sum(wr_bp_0 .* conj(u_0), 2) ./ sum(abs(u_0) .^ 2, 2);
-X_0(zero_index) = 0;
+X_0(stp.maskp) = 0;
 
 for kk = 1 : src_Tx_N
-    wr_bp_0(zero_index, kk) = 0;
+    wr_bp_0(stp.maskp, kk) = 0;
 end
 
 % X_0 = X_initial;
@@ -250,7 +249,7 @@ for itr = 2 : itr_num
     Ez_tot_csi = Ez_inc_MoM + Gezz * wr_Ez_csi;
     
     for kk = 1 : src_Tx_N
-        wr_Ez_csi(zero_index, kk) = 0;
+        wr_Ez_csi(stp.maskp, kk) = 0;
     end
     
     %%% Update the contrast (X)
@@ -261,7 +260,7 @@ for itr = 2 : itr_num
     denominator = sum(abs(Ez_tot_csi) .^ 2, 2);
     X_csi = numerator ./ denominator;
 
-    X_csi(zero_index) = 0;
+    X_csi(stp.maskp) = 0;
 
     %%% Update the parameters in CSI (pho, r, eta_d)
     pho = S_scat - (Gezz_source * wr_Ez_csi);
